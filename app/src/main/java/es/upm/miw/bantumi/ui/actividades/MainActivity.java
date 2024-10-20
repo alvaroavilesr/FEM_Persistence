@@ -1,6 +1,7 @@
 package es.upm.miw.bantumi.ui.actividades;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -18,8 +19,11 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Locale;
 
+import es.upm.miw.bantumi.datos.FilePersistence;
 import es.upm.miw.bantumi.ui.fragmentos.FinalAlertDialog;
 import es.upm.miw.bantumi.R;
 import es.upm.miw.bantumi.dominio.logica.JuegoBantumi;
@@ -141,6 +145,27 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case R.id.opcReiniciarPartida:
                 new RestartAlertDialog().show(getSupportFragmentManager(), "ALERT_DIALOG");
+                return true;
+            case R.id.opcGuardarPartida:
+                FilePersistence filePersistence = new FilePersistence();
+                FileOutputStream fos;
+                try {
+                    fos = openFileOutput("SavedGames.txt", Context.MODE_PRIVATE);
+                    filePersistence.saveGame(juegoBantumi.serializa(), fos);
+                    Snackbar.make(
+                            findViewById(android.R.id.content),
+                            getString(R.string.txtDialogoGuardar),
+                            Snackbar.LENGTH_LONG
+                    ).show();
+                } catch (IOException e) {
+                    Log.e(LOG_TAG, "FILE I/O ERROR: " + e.getMessage());
+                    e.printStackTrace();
+                    Snackbar.make(
+                            findViewById(android.R.id.content),
+                            getString(R.string.txtDialogoGuardarError),
+                            Snackbar.LENGTH_LONG
+                    ).show();
+                }
                 return true;
 
             // @TODO!!! resto opciones

@@ -2,6 +2,9 @@ package es.upm.miw.bantumi.dominio.logica;
 
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import es.upm.miw.bantumi.ui.viewmodel.BantumiViewModel;
 
 public class JuegoBantumi {
@@ -204,8 +207,11 @@ public class JuegoBantumi {
      * @return juego serializado
      */
     public String serializa() {
-        // @TODO
-        return null;
+        List<Integer> estadoPartida = new ArrayList<>();
+        for (int i = 0; i < NUM_POSICIONES; i++){
+            estadoPartida.add(getSemillas(i));
+        }
+        return estadoPartida.toString();
     }
 
     /**
