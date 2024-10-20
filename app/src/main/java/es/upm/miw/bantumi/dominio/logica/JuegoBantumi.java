@@ -3,6 +3,7 @@ package es.upm.miw.bantumi.dominio.logica;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import es.upm.miw.bantumi.ui.viewmodel.BantumiViewModel;
@@ -220,6 +221,12 @@ public class JuegoBantumi {
      * @param juegoSerializado cadena que representa el estado completo del juego
      */
     public void deserializa(String juegoSerializado) {
-        // @TODO
+        juegoSerializado = juegoSerializado.substring(1, juegoSerializado.length() - 1);
+        List<String> estadoPartidaString =
+                new ArrayList<>(Arrays.asList(juegoSerializado.split(",")));
+        for (int i = 0; i < NUM_POSICIONES; i++){
+            setSemillas(i,Integer.parseInt(estadoPartidaString.get(i).trim()));
+        }
+        setTurno(Turno.turnoJ1);
     }
 }

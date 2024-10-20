@@ -19,8 +19,10 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.io.BufferedReader;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Locale;
 
 import es.upm.miw.bantumi.datos.FilePersistence;
@@ -132,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        FilePersistence filePersistence = new FilePersistence();
         switch (item.getItemId()) {
 //            case R.id.opcAjustes: // @todo Preferencias
 //                startActivity(new Intent(this, BantumiPrefs.class));
@@ -147,11 +150,10 @@ public class MainActivity extends AppCompatActivity {
                 new RestartAlertDialog().show(getSupportFragmentManager(), "ALERT_DIALOG");
                 return true;
             case R.id.opcGuardarPartida:
-                FilePersistence filePersistence = new FilePersistence();
-                FileOutputStream fos;
+                FileOutputStream fosSave;
                 try {
-                    fos = openFileOutput("SavedGames.txt", Context.MODE_PRIVATE);
-                    filePersistence.saveGame(juegoBantumi.serializa(), fos);
+                    fosSave = openFileOutput("SavedGames.txt", Context.MODE_PRIVATE);
+                    filePersistence.saveGame(juegoBantumi.serializa(), fosSave);
                     Snackbar.make(
                             findViewById(android.R.id.content),
                             getString(R.string.txtDialogoGuardar),
@@ -163,6 +165,40 @@ public class MainActivity extends AppCompatActivity {
                     Snackbar.make(
                             findViewById(android.R.id.content),
                             getString(R.string.txtDialogoGuardarError),
+                            Snackbar.LENGTH_LONG
+                    ).show();
+                }
+                return true;
+            case R.id.opcRecuperarPartida:
+                BufferedReader finCheck;
+                BufferedReader finRead;
+                try {
+                    finCheck = new BufferedReader(
+                            new InputStreamReader(openFileInput("SavedGames.txt")));
+                    if(filePersistence.checkSavedGames(finCheck)) {
+                        finRead = new BufferedReader(
+                                new InputStreamReader(openFileInput("SavedGames.txt")));
+                        String savedGame = filePersistence.loadGame(finRead);
+                        juegoBantumi.deserializa(savedGame);
+                        Snackbar.make(
+                                findViewById(android.R.id.content),
+                                getString(R.string.txtDialogoCargar),
+                                Snackbar.LENGTH_LONG
+                        ).show();
+                    }else{
+                        finCheck.close();
+                        Snackbar.make(
+                                findViewById(android.R.id.content),
+                                getString(R.string.txtDialogoFicheroVacio),
+                                Snackbar.LENGTH_LONG
+                        ).show();
+                    }
+                } catch (IOException e) {
+                    Log.e(LOG_TAG, "FILE I/O ERROR: " + e.getMessage());
+                    e.printStackTrace();
+                    Snackbar.make(
+                            findViewById(android.R.id.content),
+                            getString(R.string.txtDialogoCargarError),
                             Snackbar.LENGTH_LONG
                     ).show();
                 }

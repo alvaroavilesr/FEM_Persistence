@@ -22,4 +22,7 @@ Luego creo la clase FilePersistence, que pasándole ya la conexión al fichero c
 
 **Nota: he intentado guardar el nombre del fichero en el XML de Strings, pero me lo guardaba como int, por eso esta directamente indicado en el código a pesar de no ser una buena practica.
 
+3. Cargar partida
+
+Se ha añadido una nueva opción en el switch de menu, donde se controla la funcionalidad de cargar partida. Para ello se crea un BufferedReader para leer el fichero de juegos guardados. Primero comprobamos que haya alguna partida guardada, y si la hay leemos la partida y la deserializamos para poner el estado de la partida actual al leído.
 
