@@ -32,7 +32,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import es.upm.miw.bantumi.datos.databaseStorage.Score;
-import es.upm.miw.bantumi.datos.databaseStorage.UserDatabase;
+import es.upm.miw.bantumi.datos.databaseStorage.ScoreDatabase;
 import es.upm.miw.bantumi.datos.fileStorage.FilePersistence;
 import es.upm.miw.bantumi.ui.fragmentos.FinalAlertDialog;
 import es.upm.miw.bantumi.R;
@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     public JuegoBantumi juegoBantumi;
     private BantumiViewModel bantumiVM;
     int numInicialSemillas;
-    private UserDatabase db;
+    private ScoreDatabase db;
     private SharedPreferences sharedPrefs;
 
     @Override
@@ -226,9 +226,9 @@ public class MainActivity extends AppCompatActivity {
                     ).show();
                 }
                 return true;
-
-            // @TODO!!! resto opciones
-
+            case R.id.opcMejoresResultados:
+                startActivity(new Intent(this, BestScores.class));
+                return true;
             default:
                 Snackbar.make(
                         findViewById(android.R.id.content),
@@ -279,7 +279,7 @@ public class MainActivity extends AppCompatActivity {
             texto = "¡¡¡ EMPATE !!!";
         }
 
-        db = UserDatabase.getInstancia(this);
+        db = ScoreDatabase.getInstancia(this);
         Score score = new Score(
                 playerName1,
                 playerName2,
@@ -289,7 +289,7 @@ public class MainActivity extends AppCompatActivity {
         );
         ExecutorService executorService = Executors.newSingleThreadExecutor();
         executorService.execute(() -> {
-            db.userDao().insert(score);
+            db.scoreDao().insert(score);
         });
         executorService.shutdown();
 

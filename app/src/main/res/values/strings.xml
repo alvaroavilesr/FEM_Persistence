@@ -48,6 +48,10 @@
     <string name="settingsPlayerName1">Nombre del jugador 1</string>
     <string name="settingsPlayerName2">Nombre del jugador 2</string>
 
+    <!-- Mejores puntuaciones -->
+    <string name="bestScoresTitle">MEJORES PUNTUACIONES</string>
+    <string name="bestScoresEmpty">No hay puntuaciones guardadas</string>
+
     <!-- Diálogos -->
     <string name="txtDialogoFinalTitulo">Fin del juego</string>
     <string name="txtDialogoFinalPregunta">¿Desea jugar otra partida?</string>
