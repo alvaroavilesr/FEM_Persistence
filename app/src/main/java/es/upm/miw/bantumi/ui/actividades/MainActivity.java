@@ -2,6 +2,7 @@ package es.upm.miw.bantumi.ui.actividades;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -23,9 +24,14 @@ import java.io.BufferedReader;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Calendar;
 import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-import es.upm.miw.bantumi.datos.FilePersistence;
+import es.upm.miw.bantumi.datos.databaseStorage.Score;
+import es.upm.miw.bantumi.datos.databaseStorage.UserDatabase;
+import es.upm.miw.bantumi.datos.fileStorage.FilePersistence;
 import es.upm.miw.bantumi.ui.fragmentos.FinalAlertDialog;
 import es.upm.miw.bantumi.R;
 import es.upm.miw.bantumi.dominio.logica.JuegoBantumi;
@@ -34,10 +40,11 @@ import es.upm.miw.bantumi.ui.viewmodel.BantumiViewModel;
 
 public class MainActivity extends AppCompatActivity {
 
-    protected final String LOG_TAG = "MiW";
+    protected static final String LOG_TAG = "MiW";
     public JuegoBantumi juegoBantumi;
     private BantumiViewModel bantumiVM;
     int numInicialSemillas;
+    private UserDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,9 +143,9 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         FilePersistence filePersistence = new FilePersistence();
         switch (item.getItemId()) {
-//            case R.id.opcAjustes: // @todo Preferencias
-//                startActivity(new Intent(this, BantumiPrefs.class));
-//                return true;
+            case R.id.opcAjustes:
+                startActivity(new Intent(this, BantumiPrefs.class));
+                return true;
             case R.id.opcAcercaDe:
                 new AlertDialog.Builder(this)
                         .setTitle(R.string.aboutTitle)
@@ -253,9 +260,20 @@ public class MainActivity extends AppCompatActivity {
             texto = "¡¡¡ EMPATE !!!";
         }
 
-        // @TODO guardar puntuación
+        db = UserDatabase.getInstancia(this);
+        Score score = new Score("Alvaro",
+                Calendar.getInstance().getTime().toString(),
+                juegoBantumi.getSemillas(6),
+                juegoBantumi.getSemillas(13)
+        );
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        executorService.execute(() -> {
+            db.userDao().insert(score);
+        });
+        executorService.shutdown();
 
         // terminar
         new FinalAlertDialog(texto).show(getSupportFragmentManager(), "ALERT_DIALOG");
     }
+
 }

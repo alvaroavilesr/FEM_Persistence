@@ -40,6 +40,10 @@ dependencies {
     implementation libs.androidx.lifecycle.livedata
 
     implementation libs.androidx.lifecycle.livedata.core
+    implementation libs.androidx.room.common
+    implementation libs.androidx.room.runtime
+    implementation libs.androidx.preference
+    annotationProcessor libs.androidx.room.compiler
 }
 
 java {
