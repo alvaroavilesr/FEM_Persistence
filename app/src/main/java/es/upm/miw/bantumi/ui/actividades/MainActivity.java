@@ -3,7 +3,9 @@ package es.upm.miw.bantumi.ui.actividades;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -45,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
     private BantumiViewModel bantumiVM;
     int numInicialSemillas;
     private UserDatabase db;
+    private SharedPreferences sharedPrefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +67,19 @@ public class MainActivity extends AppCompatActivity {
         crearObservadores();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String playerName1 = sharedPrefs.getString("playerName1", "Jugador 1");
+        String playerName2 = sharedPrefs.getString("playerName2", "Jugador 2");
+
+        TextView tvPlayer1 = findViewById(R.id.tvPlayer1);
+        tvPlayer1.setText(playerName1);
+        TextView tvPlayer2 = findViewById(R.id.tvPlayer2);
+        tvPlayer2.setText(playerName2);
+    }
     /**
      * Crea y subscribe los observadores asignados a las posiciones del tablero.
      * Si se modifica el contenido del tablero -> se actualiza la vista.
@@ -253,15 +269,20 @@ public class MainActivity extends AppCompatActivity {
      * El juego ha terminado. Volver a jugar?
      */
     private void finJuego() {
+        String playerName1 = sharedPrefs.getString("playerName1","Jugador 1");
+        String playerName2 = sharedPrefs.getString("playerName2","Jugador 2");
+
         String texto = (juegoBantumi.getSemillas(6) > 6 * numInicialSemillas)
-                ? "Gana Jugador 1"
-                : "Gana Jugador 2";
+                ? "Gana " + playerName1
+                : "Gana " + playerName2;
         if (juegoBantumi.getSemillas(6) == 6 * numInicialSemillas) {
             texto = "¡¡¡ EMPATE !!!";
         }
 
         db = UserDatabase.getInstancia(this);
-        Score score = new Score("Alvaro",
+        Score score = new Score(
+                playerName1,
+                playerName2,
                 Calendar.getInstance().getTime().toString(),
                 juegoBantumi.getSemillas(6),
                 juegoBantumi.getSemillas(13)

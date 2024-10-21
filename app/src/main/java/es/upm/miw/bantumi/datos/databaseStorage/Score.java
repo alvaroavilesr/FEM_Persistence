@@ -10,8 +10,11 @@ public class Score {
     @PrimaryKey(autoGenerate = true)
     public int uid;
 
-    @ColumnInfo(name = "player_name")
-    public String playerName;
+    @ColumnInfo(name = "player_name1")
+    public String playerName1;
+
+    @ColumnInfo(name = "player_name2")
+    public String playerName2;
 
     @ColumnInfo(name = "date")
     public String date;
@@ -22,8 +25,9 @@ public class Score {
     @ColumnInfo(name = "seeds_p2")
     public int seedsP2;
 
-    public Score(String playerName, String date, int seedsP1, int seedsP2) {
-        this.playerName = playerName;
+    public Score(String playerName1, String playerName2, String date, int seedsP1, int seedsP2) {
+        this.playerName1 = playerName1;
+        this.playerName2 = playerName2;
         this.date = date;
         this.seedsP1 = seedsP1;
         this.seedsP2 = seedsP2;
@@ -37,12 +41,20 @@ public class Score {
         this.uid = uid;
     }
 
-    public String getPlayerName() {
-        return playerName;
+    public String getPlayerName1() {
+        return playerName1;
     }
 
-    public void setPlayerName(String playerName) {
-        this.playerName = playerName;
+    public void setPlayerName1(String playerName1) {
+        this.playerName1 = playerName1;
+    }
+
+    public String getPlayerName2() {
+        return playerName2;
+    }
+
+    public void setPlayerName2(String playerName2) {
+        this.playerName2 = playerName2;
     }
 
     public String getDate() {

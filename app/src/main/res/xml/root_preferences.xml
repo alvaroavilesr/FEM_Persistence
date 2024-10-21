@@ -4,9 +4,14 @@
         app:icon="@android:drawable/ic_menu_preferences"
         app:title="@string/settingsTitle">
         <EditTextPreference
-            app:key="playerName"
-            app:title="@string/settingsPlayerName"
+            app:key="playerName1"
+            app:title="@string/settingsPlayerName1"
+            app:useSimpleSummaryProvider="true" />
+        <EditTextPreference
+            app:key="playerName2"
+            app:title="@string/settingsPlayerName2"
             app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
+
 
 </PreferenceScreen>

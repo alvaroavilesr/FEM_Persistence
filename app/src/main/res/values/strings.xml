@@ -45,7 +45,8 @@
 
     <!-- Ajustes -->
     <string name="settingsTitle">AJUSTES DEL JUEGO</string>
-    <string name="settingsPlayerName">Nombre del jugador</string>
+    <string name="settingsPlayerName1">Nombre del jugador 1</string>
+    <string name="settingsPlayerName2">Nombre del jugador 2</string>
 
     <!-- Diálogos -->
     <string name="txtDialogoFinalTitulo">Fin del juego</string>
