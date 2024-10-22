@@ -43,6 +43,7 @@ dependencies {
     implementation libs.androidx.room.common
     implementation libs.androidx.room.runtime
     implementation libs.androidx.preference
+    implementation libs.androidx.recyclerview
     annotationProcessor libs.androidx.room.compiler
 }
 

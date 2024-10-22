@@ -18,4 +18,7 @@ public interface ScoreDao {
             "ORDER BY max_seeds DESC " +
             "LIMIT 10")
     List<Score> getTop10Scores();
+
+    @Query("DELETE FROM scores")
+    void deleteAllScores();
 }

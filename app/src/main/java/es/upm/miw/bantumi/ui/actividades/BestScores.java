@@ -2,6 +2,8 @@ package es.upm.miw.bantumi.ui.actividades;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,12 +20,14 @@ import es.upm.miw.bantumi.datos.databaseStorage.Score;
 import es.upm.miw.bantumi.datos.databaseStorage.ScoreDao;
 import es.upm.miw.bantumi.datos.databaseStorage.ScoreDatabase;
 import es.upm.miw.bantumi.ui.adaptadores.ScoreAdapter;
+import es.upm.miw.bantumi.ui.fragmentos.DeleteScoresAlertDialog;
 
 public class BestScores extends AppCompatActivity {
     private RecyclerView recyclerView;
-    private TextView textViewNoData;
+    private LinearLayout noDataLayout;
     private ScoreAdapter scoreAdapter;
     private ScoreDao scoreDao;
+    private Button buttonDeleteAllScores;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,35 +44,46 @@ public class BestScores extends AppCompatActivity {
         });
 
         recyclerView = findViewById(R.id.recyclerViewTopScores);
-        textViewNoData = findViewById(R.id.textViewNoData); // Referencia al TextView
+        noDataLayout = findViewById(R.id.noDataLayout);  // Referencia al layout "no hay datos"
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        // Inicializa el adaptador y lo configura en el RecyclerView
         scoreAdapter = new ScoreAdapter(new ArrayList<>());
         recyclerView.setAdapter(scoreAdapter);
 
-        // Obtiene el DAO y recupera los 10 mejores puntajes
         scoreDao = ScoreDatabase.getInstancia(this).scoreDao();
         loadTopScores();
+
+        buttonDeleteAllScores = findViewById(R.id.buttonDeleteAllScores);
+        buttonDeleteAllScores.setOnClickListener(v -> {
+            new DeleteScoresAlertDialog().show(getSupportFragmentManager(), "DELETE_DIALOG");
+        });
     }
 
     private void loadTopScores() {
-        // Ejecuta la consulta en un hilo aparte para evitar bloquear la UI
         new Thread(() -> {
             List<Score> topScores = scoreDao.getTop10Scores();
 
-            // Actualiza la interfaz en el hilo principal
             runOnUiThread(() -> {
                 if (topScores.isEmpty()) {
-                    // Mostrar mensaje de "no hay datos"
-                    textViewNoData.setVisibility(View.VISIBLE);
+                    noDataLayout.setVisibility(View.VISIBLE);
                     recyclerView.setVisibility(View.GONE);
                 } else {
-                    // Mostrar el RecyclerView con los datos
-                    textViewNoData.setVisibility(View.GONE);
+                    noDataLayout.setVisibility(View.GONE);
                     recyclerView.setVisibility(View.VISIBLE);
+                    buttonDeleteAllScores.setVisibility(View.VISIBLE);
                     scoreAdapter.setScores(topScores);
                 }
+            });
+        }).start();
+    }
+
+    public void deleteAllScores() {
+        new Thread(() -> {
+            scoreDao.deleteAllScores();
+            runOnUiThread(() -> {
+                noDataLayout.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
+                buttonDeleteAllScores.setVisibility(View.GONE);
+                scoreAdapter.setScores(new ArrayList<>());
             });
         }).start();
     }

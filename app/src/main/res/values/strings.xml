@@ -51,6 +51,7 @@
     <!-- Mejores puntuaciones -->
     <string name="bestScoresTitle">MEJORES PUNTUACIONES</string>
     <string name="bestScoresEmpty">No hay puntuaciones guardadas</string>
+    <string name="bestScoresBorrarPuntuaciones">Borrar puntuaciones</string>
 
     <!-- Diálogos -->
     <string name="txtDialogoFinalTitulo">Fin del juego</string>
@@ -61,4 +62,5 @@
     <string name="txtDialogoCargar">Partida cargada correctamente</string>
     <string name="txtDialogoCargarError">La partida no se ha podido cargar</string>
     <string name="txtDialogoFicheroVacio">No hay partidas guardadas</string>
+    <string name="txtDialogoPreguntaEliminar">¿Seguro que quiere eliminar todas las puntuaciones?</string>
 </resources>

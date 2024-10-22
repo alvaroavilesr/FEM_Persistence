@@ -2,18 +2,49 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="16dp">
 
+    <!-- RecyclerView para mostrar los mejores puntajes -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewTopScores"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:visibility="visible" />
 
-    <TextView
-        android:id="@+id/textViewNoData"
+    <!-- Botón para borrar las puntuaciones -->
+    <Button
+        android:id="@+id/buttonDeleteAllScores"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/bestScoresEmpty"
-        android:visibility="gone" />
+        android:text="@string/bestScoresBorrarPuntuaciones"
+        android:visibility="gone" />  <!-- Inicialmente oculto -->
+
+    <!-- Layout que se muestra cuando no hay datos -->
+    <LinearLayout
+        android:id="@+id/noDataLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/noDataIcon"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@android:drawable/ic_dialog_alert" />
+
+        <TextView
+            android:id="@+id/textViewNoData"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/bestScoresEmpty"
+            android:textSize="16sp"
+            android:textStyle="italic" />
+    </LinearLayout>
+
 </LinearLayout>
