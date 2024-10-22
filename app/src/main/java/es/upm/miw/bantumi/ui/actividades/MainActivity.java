@@ -158,6 +158,7 @@ public class MainActivity extends AppCompatActivity {
 
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         FilePersistence filePersistence = new FilePersistence();
+        BufferedReader finCheck;
         switch (item.getItemId()) {
             case R.id.opcAjustes:
                 startActivity(new Intent(this, BantumiPrefs.class));
@@ -195,13 +196,23 @@ public class MainActivity extends AppCompatActivity {
             case R.id.opcBorrarPartida:
                 FileOutputStream fosDelete;
                 try {
-                    fosDelete = openFileOutput("SavedGames.txt", Context.MODE_PRIVATE);
-                    fosDelete.close();
-                    Snackbar.make(
-                            findViewById(android.R.id.content),
-                            getString(R.string.txtDialogoBorrar),
-                            Snackbar.LENGTH_LONG
-                    ).show();
+                    finCheck = new BufferedReader(
+                            new InputStreamReader(openFileInput("SavedGames.txt")));
+                    if(filePersistence.checkSavedGames(finCheck)) {
+                        fosDelete = openFileOutput("SavedGames.txt", Context.MODE_PRIVATE);
+                        fosDelete.close();
+                        Snackbar.make(
+                                findViewById(android.R.id.content),
+                                getString(R.string.txtDialogoBorrar),
+                                Snackbar.LENGTH_LONG
+                        ).show();
+                    }else{
+                        Snackbar.make(
+                                findViewById(android.R.id.content),
+                                getString(R.string.txtDialogoFicheroVacio),
+                                Snackbar.LENGTH_LONG
+                        ).show();
+                    }
                 } catch (IOException e) {
                     Log.e(LOG_TAG, "FILE I/O ERROR: " + e.getMessage());
                     e.printStackTrace();
@@ -213,7 +224,6 @@ public class MainActivity extends AppCompatActivity {
                 }
                 return true;
             case R.id.opcRecuperarPartida:
-                BufferedReader finCheck;
                 BufferedReader finRead;
                 try {
                     finCheck = new BufferedReader(
