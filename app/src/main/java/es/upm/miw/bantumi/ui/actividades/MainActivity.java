@@ -192,6 +192,26 @@ public class MainActivity extends AppCompatActivity {
                     ).show();
                 }
                 return true;
+            case R.id.opcBorrarPartida:
+                FileOutputStream fosDelete;
+                try {
+                    fosDelete = openFileOutput("SavedGames.txt", Context.MODE_PRIVATE);
+                    fosDelete.close();
+                    Snackbar.make(
+                            findViewById(android.R.id.content),
+                            getString(R.string.txtDialogoBorrar),
+                            Snackbar.LENGTH_LONG
+                    ).show();
+                } catch (IOException e) {
+                    Log.e(LOG_TAG, "FILE I/O ERROR: " + e.getMessage());
+                    e.printStackTrace();
+                    Snackbar.make(
+                            findViewById(android.R.id.content),
+                            getString(R.string.txtDialogoBorrarError),
+                            Snackbar.LENGTH_LONG
+                    ).show();
+                }
+                return true;
             case R.id.opcRecuperarPartida:
                 BufferedReader finCheck;
                 BufferedReader finRead;
@@ -209,7 +229,6 @@ public class MainActivity extends AppCompatActivity {
                                 Snackbar.LENGTH_LONG
                         ).show();
                     }else{
-                        finCheck.close();
                         Snackbar.make(
                                 findViewById(android.R.id.content),
                                 getString(R.string.txtDialogoFicheroVacio),

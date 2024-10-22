@@ -19,6 +19,14 @@
         />
 
     <item
+        android:id="@+id/opcBorrarPartida"
+        android:title="@string/txtOpcionBorrar"
+        android:icon="@android:drawable/ic_menu_delete"
+        android:orderInCategory="12"
+        app:showAsAction="ifRoom"
+        />
+
+    <item
         android:id="@+id/opcRecuperarPartida"
         android:title="@string/txtOpcionRecuperar"
         android:icon="@android:drawable/ic_menu_revert"

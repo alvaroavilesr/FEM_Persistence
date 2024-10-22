@@ -18,6 +18,7 @@ public class FilePersistence {
             hasContent = true;
             linea = fin.readLine();
         }
+        fin.close();
         return hasContent;
     }
     public String loadGame(BufferedReader fin) throws IOException {

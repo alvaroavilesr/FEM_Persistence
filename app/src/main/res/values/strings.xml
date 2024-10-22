@@ -15,6 +15,7 @@
     <!-- Opciones -->
     <string name="txtReiniciarPartida">Reiniciar</string>
     <string name="txtOpcionGuardar">Guardar Partida</string>
+    <string name="txtOpcionBorrar">Borrar Partida</string>
     <string name="txtOpcionRecuperar">Recuperar Partida</string>
     <string name="txtOpcionMejoresResultados">Mejores Resultados</string>
 
@@ -59,8 +60,11 @@
     <string name="txtDialogoPreguntaReiniciar">¿Esta seguro que quiere reiniciar la partida?</string>
     <string name="txtDialogoGuardar">Partida guardada correctamente</string>
     <string name="txtDialogoGuardarError">La partida no se ha podido guardar</string>
+    <string name="txtDialogoBorrar">Partida guardada se ha borrado</string>
+    <string name="txtDialogoBorrarError">La partida no se ha podido borrar</string>
     <string name="txtDialogoCargar">Partida cargada correctamente</string>
     <string name="txtDialogoCargarError">La partida no se ha podido cargar</string>
     <string name="txtDialogoFicheroVacio">No hay partidas guardadas</string>
     <string name="txtDialogoPreguntaEliminar">¿Seguro que quiere eliminar todas las puntuaciones?</string>
+    <string name="txtDialogoBorrarPuntuaciones">Todas las puntuaciones se han eliminado</string>
 </resources>

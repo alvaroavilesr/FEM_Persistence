@@ -11,6 +11,8 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -85,5 +87,10 @@ public class BestScores extends AppCompatActivity {
                 scoreAdapter.setScores(new ArrayList<>());
             });
         }).start();
+        Snackbar.make(
+                findViewById(android.R.id.content),
+                getString(R.string.txtDialogoBorrarPuntuaciones),
+                Snackbar.LENGTH_LONG
+        ).show();
     }
 }
