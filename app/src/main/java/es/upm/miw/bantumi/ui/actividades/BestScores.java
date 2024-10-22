@@ -3,6 +3,7 @@ package es.upm.miw.bantumi.ui.actividades;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,9 +27,13 @@ import es.upm.miw.bantumi.ui.fragmentos.DeleteScoresAlertDialog;
 public class BestScores extends AppCompatActivity {
     private RecyclerView recyclerView;
     private LinearLayout noDataLayout;
+    private LinearLayout noDataMatchFilter;
     private ScoreAdapter scoreAdapter;
     private ScoreDao scoreDao;
     private Button buttonDeleteAllScores;
+    private Button buttonApplyFilter;
+    private EditText editTextMinSeeds;
+    private List<Score> allScores;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,10 +50,12 @@ public class BestScores extends AppCompatActivity {
         });
 
         recyclerView = findViewById(R.id.recyclerViewTopScores);
-        noDataLayout = findViewById(R.id.noDataLayout);  // Referencia al layout "no hay datos"
+        noDataLayout = findViewById(R.id.noDataLayout);
+        noDataMatchFilter = findViewById(R.id.noDataMatchFilter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         scoreAdapter = new ScoreAdapter(new ArrayList<>());
         recyclerView.setAdapter(scoreAdapter);
+        editTextMinSeeds = findViewById(R.id.editTextMinSeeds);
 
         scoreDao = ScoreDatabase.getInstancia(this).scoreDao();
         loadTopScores();
@@ -57,21 +64,31 @@ public class BestScores extends AppCompatActivity {
         buttonDeleteAllScores.setOnClickListener(v -> {
             new DeleteScoresAlertDialog().show(getSupportFragmentManager(), "DELETE_DIALOG");
         });
+
+        buttonApplyFilter = findViewById(R.id.buttonApplyFilter);
+        buttonApplyFilter.setOnClickListener(v -> {
+            String minSeedsStr = editTextMinSeeds.getText().toString();
+            int minSeeds = minSeedsStr.isEmpty() ? 0 : Integer.parseInt(minSeedsStr);
+            applyFilter(minSeeds);
+        });
     }
 
     private void loadTopScores() {
         new Thread(() -> {
-            List<Score> topScores = scoreDao.getTop10Scores();
-
+            allScores = scoreDao.getTop10Scores();
             runOnUiThread(() -> {
-                if (topScores.isEmpty()) {
+                if (allScores.isEmpty()) {
                     noDataLayout.setVisibility(View.VISIBLE);
                     recyclerView.setVisibility(View.GONE);
+                    buttonApplyFilter.setVisibility(View.GONE);
+                    editTextMinSeeds.setVisibility(View.GONE);
+                    noDataMatchFilter.setVisibility(View.GONE);
                 } else {
                     noDataLayout.setVisibility(View.GONE);
                     recyclerView.setVisibility(View.VISIBLE);
                     buttonDeleteAllScores.setVisibility(View.VISIBLE);
-                    scoreAdapter.setScores(topScores);
+                    scoreAdapter.setScores(allScores);
+                    noDataMatchFilter.setVisibility(View.GONE);
                 }
             });
         }).start();
@@ -84,6 +101,9 @@ public class BestScores extends AppCompatActivity {
                 noDataLayout.setVisibility(View.VISIBLE);
                 recyclerView.setVisibility(View.GONE);
                 buttonDeleteAllScores.setVisibility(View.GONE);
+                buttonApplyFilter.setVisibility(View.GONE);
+                editTextMinSeeds.setVisibility(View.GONE);
+                noDataMatchFilter.setVisibility(View.GONE);
                 scoreAdapter.setScores(new ArrayList<>());
             });
         }).start();
@@ -92,5 +112,34 @@ public class BestScores extends AppCompatActivity {
                 getString(R.string.txtDialogoBorrarPuntuaciones),
                 Snackbar.LENGTH_LONG
         ).show();
+    }
+
+    private void applyFilter(int minSeeds) {
+        List<Score> filteredScores = new ArrayList<>();
+
+        for (Score score : allScores) {
+            int maxSeeds = Math.max(score.seedsP1, score.seedsP2);
+            if (maxSeeds >= minSeeds) {
+                filteredScores.add(score);
+            }
+        }
+
+        if (filteredScores.isEmpty()) {
+            noDataMatchFilter.setVisibility(View.VISIBLE);
+            noDataLayout.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.GONE);
+            buttonDeleteAllScores.setVisibility(View.GONE);
+            Snackbar.make(
+                    findViewById(android.R.id.content),
+                    getString(R.string.txtDialogoNoResultsForFilter),
+                    Snackbar.LENGTH_LONG
+            ).show();
+        } else {
+            noDataLayout.setVisibility(View.GONE);
+            noDataMatchFilter.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+            scoreAdapter.setScores(filteredScores);
+            buttonDeleteAllScores.setVisibility(View.VISIBLE);
+        }
     }
 }

@@ -1,12 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
     android:padding="16dp">
 
-    <!-- RecyclerView para mostrar los mejores puntajes -->
+    <EditText
+        android:id="@+id/editTextMinSeeds"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/numMinimoSemillas"
+        android:inputType="number"
+        android:layout_marginBottom="16dp"/>
+
+    <Button
+        android:id="@+id/buttonApplyFilter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/applyFilter"
+        android:layout_gravity="center"
+        android:layout_marginBottom="16dp"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewTopScores"
         android:layout_width="match_parent"
@@ -14,15 +30,13 @@
         android:layout_weight="1"
         android:visibility="visible" />
 
-    <!-- Botón para borrar las puntuaciones -->
     <Button
         android:id="@+id/buttonDeleteAllScores"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/bestScoresBorrarPuntuaciones"
-        android:visibility="gone" />  <!-- Inicialmente oculto -->
+        android:visibility="gone" />
 
-    <!-- Layout que se muestra cuando no hay datos -->
     <LinearLayout
         android:id="@+id/noDataLayout"
         android:layout_width="wrap_content"
@@ -43,6 +57,31 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="@string/bestScoresEmpty"
+            android:textSize="16sp"
+            android:textStyle="italic" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/noDataMatchFilter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone"
+        tools:ignore="UseCompoundDrawables">
+
+        <ImageView
+            android:id="@+id/noDataMatchIcon"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@android:drawable/ic_dialog_alert" />
+
+        <TextView
+            android:id="@+id/textViewNoDataMatch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/bestScoresNoMatch"
             android:textSize="16sp"
             android:textStyle="italic" />
     </LinearLayout>

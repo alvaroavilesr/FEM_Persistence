@@ -52,7 +52,11 @@
     <!-- Mejores puntuaciones -->
     <string name="bestScoresTitle">MEJORES PUNTUACIONES</string>
     <string name="bestScoresEmpty">No hay puntuaciones guardadas</string>
+    <string name="bestScoresNoMatch">Ninguna puntuacion coincide</string>
     <string name="bestScoresBorrarPuntuaciones">Borrar puntuaciones</string>
+    <string name="numMinimoSemillas">Numero minimo de semillas</string>
+    <string name="applyFilter">Aplicar filtro</string>
+    <string name="txtDialogoNoResultsForFilter">No hay resultados para este filtro</string>
 
     <!-- Diálogos -->
     <string name="txtDialogoFinalTitulo">Fin del juego</string>
