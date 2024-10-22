@@ -43,3 +43,15 @@ Para la parte de mejores resultados se han implementeado los siguientes cambios:
 - Se ha creado una actividad para manejar y gestionar los mejores resultados.
 - Para mostrar los mejores resultados, si no hay ninguno se mostrará un mensaje indicándolo. En caso de que si haya, se mostraran los 10 (o menos si hay menos en base de datos), así como un botón para borrar todas las puntuaciones.
 Este botón primero lanzará un fragmento para confirmar si verdaderamente se desean borrar estas puntuaciones.
+
+-----------------------
+ACTIVIDADES OPCIONALES
+-----------------------
+
+1. Borrar partida guardada
+
+Se ha añadido un botón en el menu para eliminar la partida que se hubiera guardado. Para ello se abre el fichero para escritura en modo privado. Se controla si el fichero esta vacio previamente o no.
+
+2. Filtrar en los mejores resultados por numero de semillas
+
+3. Filtrar en los mejores resultados por nombre de jugador

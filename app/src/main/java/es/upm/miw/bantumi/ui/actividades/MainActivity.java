@@ -37,6 +37,7 @@ import es.upm.miw.bantumi.datos.fileStorage.FilePersistence;
 import es.upm.miw.bantumi.ui.fragmentos.FinalAlertDialog;
 import es.upm.miw.bantumi.R;
 import es.upm.miw.bantumi.dominio.logica.JuegoBantumi;
+import es.upm.miw.bantumi.ui.fragmentos.LoadGameAlertDialog;
 import es.upm.miw.bantumi.ui.fragmentos.RestartAlertDialog;
 import es.upm.miw.bantumi.ui.viewmodel.BantumiViewModel;
 
@@ -48,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     int numInicialSemillas;
     private ScoreDatabase db;
     private SharedPreferences sharedPrefs;
+    FilePersistence filePersistence = new FilePersistence();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,7 +159,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        FilePersistence filePersistence = new FilePersistence();
         BufferedReader finCheck;
         switch (item.getItemId()) {
             case R.id.opcAjustes:
@@ -224,20 +225,25 @@ public class MainActivity extends AppCompatActivity {
                 }
                 return true;
             case R.id.opcRecuperarPartida:
-                BufferedReader finRead;
                 try {
                     finCheck = new BufferedReader(
                             new InputStreamReader(openFileInput("SavedGames.txt")));
                     if(filePersistence.checkSavedGames(finCheck)) {
+                        BufferedReader finRead;
                         finRead = new BufferedReader(
                                 new InputStreamReader(openFileInput("SavedGames.txt")));
                         String savedGame = filePersistence.loadGame(finRead);
-                        juegoBantumi.deserializa(savedGame);
-                        Snackbar.make(
-                                findViewById(android.R.id.content),
-                                getString(R.string.txtDialogoCargar),
-                                Snackbar.LENGTH_LONG
-                        ).show();
+                        if (savedGame.equals(juegoBantumi.serializa()) ||
+                                juegoBantumi.serializa().equals("[4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 0]")){
+                            juegoBantumi.deserializa(savedGame);
+                            Snackbar.make(
+                                    findViewById(android.R.id.content),
+                                    getString(R.string.txtDialogoCargar),
+                                    Snackbar.LENGTH_LONG
+                            ).show();
+                        }else {
+                            new LoadGameAlertDialog(savedGame).show(getSupportFragmentManager(), "ALERT_DIALOG");
+                        }
                     }else{
                         Snackbar.make(
                                 findViewById(android.R.id.content),
@@ -325,5 +331,4 @@ public class MainActivity extends AppCompatActivity {
         // terminar
         new FinalAlertDialog(texto).show(getSupportFragmentManager(), "ALERT_DIALOG");
     }
-
 }
