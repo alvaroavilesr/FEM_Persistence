@@ -26,3 +26,20 @@ Luego creo la clase FilePersistence, que pasándole ya la conexión al fichero c
 
 Se ha añadido una nueva opción en el switch de menu, donde se controla la funcionalidad de cargar partida. Para ello se crea un BufferedReader para leer el fichero de juegos guardados. Primero comprobamos que haya alguna partida guardada, y si la hay leemos la partida y la deserializamos para poner el estado de la partida actual al leído.
 
+4. Guardar puntuación
+
+Para esta parte, se han usado varios mecanismos:
+
+- Se ha implementado el uso de la base de datos room, para ello todo el código esta en la carpeta datos/databaseStorage.
+- Cuando se termina una partida, se guarda en base de datos un objeto score, donde se insertan los nombres de los jugadores obteniéndolos de las preferencias.
+- Para el uso de las preferencias, el usuario podrá definir los valores por defecto en Ajustes (si no los valores por defecto definidos en las preferencias son jugador 1 y 2)
+- Se ha implementado el método onResume(para actualizar el valor de los nombres al salir de la actividad principal en caso de que cambien las preferencias)
+
+5. Mejores resultados
+
+Para la parte de mejores resultados se han implementeado los siguientes cambios:
+
+- Se han creado los métodos en el DAO getTop10Scores() y deleteAllScores().
+- Se ha creado una actividad para manejar y gestionar los mejores resultados.
+- Para mostrar los mejores resultados, si no hay ninguno se mostrará un mensaje indicándolo. En caso de que si haya, se mostraran los 10 (o menos si hay menos en base de datos), así como un botón para borrar todas las puntuaciones.
+Este botón primero lanzará un fragmento para confirmar si verdaderamente se desean borrar estas puntuaciones.
