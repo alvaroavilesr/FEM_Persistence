@@ -13,7 +13,7 @@ import java.util.List;
 import es.upm.miw.bantumi.datos.databaseStorage.Score;
 
 public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ScoreViewHolder> {
-    private List<Score> scoreList;
+    private final List<Score> scoreList;
 
     public ScoreAdapter(List<Score> scoreList) {
         this.scoreList = scoreList;

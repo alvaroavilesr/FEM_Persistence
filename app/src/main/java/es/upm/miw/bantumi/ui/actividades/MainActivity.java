@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
     int numInicialSemillas;
     private ScoreDatabase db;
     private SharedPreferences sharedPrefs;
-    FilePersistence filePersistence = new FilePersistence();
+    private final FilePersistence filePersistence = new FilePersistence();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,7 +159,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        BufferedReader finCheck;
         switch (item.getItemId()) {
             case R.id.opcAjustes:
                 startActivity(new Intent(this, BantumiPrefs.class));
@@ -175,91 +174,13 @@ public class MainActivity extends AppCompatActivity {
                 new RestartAlertDialog().show(getSupportFragmentManager(), "ALERT_DIALOG");
                 return true;
             case R.id.opcGuardarPartida:
-                FileOutputStream fosSave;
-                try {
-                    fosSave = openFileOutput("SavedGames.txt", Context.MODE_PRIVATE);
-                    filePersistence.saveGame(juegoBantumi.serializa(), fosSave);
-                    Snackbar.make(
-                            findViewById(android.R.id.content),
-                            getString(R.string.txtDialogoGuardar),
-                            Snackbar.LENGTH_LONG
-                    ).show();
-                } catch (IOException e) {
-                    Log.e(LOG_TAG, "FILE I/O ERROR: " + e.getMessage());
-                    e.printStackTrace();
-                    Snackbar.make(
-                            findViewById(android.R.id.content),
-                            getString(R.string.txtDialogoGuardarError),
-                            Snackbar.LENGTH_LONG
-                    ).show();
-                }
+                saveGame();
                 return true;
             case R.id.opcBorrarPartida:
-                FileOutputStream fosDelete;
-                try {
-                    finCheck = new BufferedReader(
-                            new InputStreamReader(openFileInput("SavedGames.txt")));
-                    if(filePersistence.checkSavedGames(finCheck)) {
-                        fosDelete = openFileOutput("SavedGames.txt", Context.MODE_PRIVATE);
-                        fosDelete.close();
-                        Snackbar.make(
-                                findViewById(android.R.id.content),
-                                getString(R.string.txtDialogoBorrar),
-                                Snackbar.LENGTH_LONG
-                        ).show();
-                    }else{
-                        Snackbar.make(
-                                findViewById(android.R.id.content),
-                                getString(R.string.txtDialogoFicheroVacio),
-                                Snackbar.LENGTH_LONG
-                        ).show();
-                    }
-                } catch (IOException e) {
-                    Log.e(LOG_TAG, "FILE I/O ERROR: " + e.getMessage());
-                    e.printStackTrace();
-                    Snackbar.make(
-                            findViewById(android.R.id.content),
-                            getString(R.string.txtDialogoBorrarError),
-                            Snackbar.LENGTH_LONG
-                    ).show();
-                }
+                deleteGame();
                 return true;
             case R.id.opcRecuperarPartida:
-                try {
-                    finCheck = new BufferedReader(
-                            new InputStreamReader(openFileInput("SavedGames.txt")));
-                    if(filePersistence.checkSavedGames(finCheck)) {
-                        BufferedReader finRead;
-                        finRead = new BufferedReader(
-                                new InputStreamReader(openFileInput("SavedGames.txt")));
-                        String savedGame = filePersistence.loadGame(finRead);
-                        if (savedGame.equals(juegoBantumi.serializa()) ||
-                                juegoBantumi.serializa().equals("[4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 0]")){
-                            juegoBantumi.deserializa(savedGame);
-                            Snackbar.make(
-                                    findViewById(android.R.id.content),
-                                    getString(R.string.txtDialogoCargar),
-                                    Snackbar.LENGTH_LONG
-                            ).show();
-                        }else {
-                            new LoadGameAlertDialog(savedGame).show(getSupportFragmentManager(), "ALERT_DIALOG");
-                        }
-                    }else{
-                        Snackbar.make(
-                                findViewById(android.R.id.content),
-                                getString(R.string.txtDialogoFicheroVacio),
-                                Snackbar.LENGTH_LONG
-                        ).show();
-                    }
-                } catch (IOException e) {
-                    Log.e(LOG_TAG, "FILE I/O ERROR: " + e.getMessage());
-                    e.printStackTrace();
-                    Snackbar.make(
-                            findViewById(android.R.id.content),
-                            getString(R.string.txtDialogoCargarError),
-                            Snackbar.LENGTH_LONG
-                    ).show();
-                }
+                loadGame();
                 return true;
             case R.id.opcMejoresResultados:
                 startActivity(new Intent(this, BestScores.class));
@@ -272,6 +193,98 @@ public class MainActivity extends AppCompatActivity {
                 ).show();
         }
         return true;
+    }
+
+    private void saveGame(){
+        FileOutputStream fosSave;
+        try {
+            fosSave = openFileOutput("SavedGames.txt", Context.MODE_PRIVATE);
+            filePersistence.saveGame(juegoBantumi.serializa(), fosSave);
+            Snackbar.make(
+                    findViewById(android.R.id.content),
+                    getString(R.string.txtDialogoGuardar),
+                    Snackbar.LENGTH_LONG
+            ).show();
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "FILE I/O ERROR: " + e.getMessage());
+            e.printStackTrace();
+            Snackbar.make(
+                    findViewById(android.R.id.content),
+                    getString(R.string.txtDialogoGuardarError),
+                    Snackbar.LENGTH_LONG
+            ).show();
+        }
+    }
+
+    private void deleteGame(){
+        FileOutputStream fosDelete;
+        BufferedReader finCheck;
+        try {
+            finCheck = new BufferedReader(
+                    new InputStreamReader(openFileInput("SavedGames.txt")));
+            if(filePersistence.checkSavedGames(finCheck)) {
+                fosDelete = openFileOutput("SavedGames.txt", Context.MODE_PRIVATE);
+                fosDelete.close();
+                Snackbar.make(
+                        findViewById(android.R.id.content),
+                        getString(R.string.txtDialogoBorrar),
+                        Snackbar.LENGTH_LONG
+                ).show();
+            }else{
+                Snackbar.make(
+                        findViewById(android.R.id.content),
+                        getString(R.string.txtDialogoFicheroVacio),
+                        Snackbar.LENGTH_LONG
+                ).show();
+            }
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "FILE I/O ERROR: " + e.getMessage());
+            e.printStackTrace();
+            Snackbar.make(
+                    findViewById(android.R.id.content),
+                    getString(R.string.txtDialogoBorrarError),
+                    Snackbar.LENGTH_LONG
+            ).show();
+        }
+    }
+
+    private void loadGame(){
+        BufferedReader finCheck;
+        try {
+            finCheck = new BufferedReader(
+                    new InputStreamReader(openFileInput("SavedGames.txt")));
+            if(filePersistence.checkSavedGames(finCheck)) {
+                BufferedReader finRead;
+                finRead = new BufferedReader(
+                        new InputStreamReader(openFileInput("SavedGames.txt")));
+                String savedGame = filePersistence.loadGame(finRead);
+                if (savedGame.equals(juegoBantumi.serializa()) ||
+                        juegoBantumi.serializa().equals("[4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 0]")){
+                    juegoBantumi.deserializa(savedGame);
+                    Snackbar.make(
+                            findViewById(android.R.id.content),
+                            getString(R.string.txtDialogoCargar),
+                            Snackbar.LENGTH_LONG
+                    ).show();
+                }else {
+                    new LoadGameAlertDialog(savedGame).show(getSupportFragmentManager(), "ALERT_DIALOG");
+                }
+            }else{
+                Snackbar.make(
+                        findViewById(android.R.id.content),
+                        getString(R.string.txtDialogoFicheroVacio),
+                        Snackbar.LENGTH_LONG
+                ).show();
+            }
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "FILE I/O ERROR: " + e.getMessage());
+            e.printStackTrace();
+            Snackbar.make(
+                    findViewById(android.R.id.content),
+                    getString(R.string.txtDialogoCargarError),
+                    Snackbar.LENGTH_LONG
+            ).show();
+        }
     }
 
     /**
@@ -314,7 +327,7 @@ public class MainActivity extends AppCompatActivity {
             texto = "¡¡¡ EMPATE !!!";
         }
 
-        db = ScoreDatabase.getInstancia(this);
+        db = ScoreDatabase.getInstance(this);
         Score score = new Score(
                 playerName1,
                 playerName2,

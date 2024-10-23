@@ -57,7 +57,7 @@ public class BestScores extends AppCompatActivity {
         recyclerView.setAdapter(scoreAdapter);
         editTextMinSeeds = findViewById(R.id.editTextMinSeeds);
 
-        scoreDao = ScoreDatabase.getInstancia(this).scoreDao();
+        scoreDao = ScoreDatabase.getInstance(this).scoreDao();
         loadTopScores();
 
         buttonDeleteAllScores = findViewById(R.id.buttonDeleteAllScores);

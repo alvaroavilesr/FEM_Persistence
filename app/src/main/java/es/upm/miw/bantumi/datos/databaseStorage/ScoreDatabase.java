@@ -10,16 +10,15 @@ import androidx.room.RoomDatabase;
 public abstract class ScoreDatabase extends RoomDatabase {
     public abstract ScoreDao scoreDao();
 
-    private static ScoreDatabase instancia;
+    private static ScoreDatabase instance;
 
-    // Método para obtener una instancia de la base de datos
-    public static synchronized ScoreDatabase getInstancia(Context context) {
-        if (instancia == null) {
-            instancia = Room.databaseBuilder(context.getApplicationContext(),
+    public static synchronized ScoreDatabase getInstance(Context context) {
+        if (instance == null) {
+            instance = Room.databaseBuilder(context.getApplicationContext(),
                             ScoreDatabase.class, "mi_base_de_datos")
                     .fallbackToDestructiveMigration()
                     .build();
         }
-        return instancia;
+        return instance;
     }
 }
